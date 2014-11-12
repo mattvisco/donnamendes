@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<!-- BEGIN html -->
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+
+<!-- BEGIN head-->
+<head>
+
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    
+    <!-- Title -->
+    <title>test slider</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="testSlider.css" type="text/css" media="screen" />
+            
+<!-- END head -->
+</head>
+
+<!-- BEGIN body -->
+<body>
+
+    <!-- <div id="container">
+        <div class="slider series1">
+            <div class="slideWrapper">
+                <article class="default_image">
+                    <img  src="viscovisco_boogie.jpg" />
+                </article>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- TESTING PURPOSES -->
+    <div id="container">
+    <div class="slider series1">
+        <div class="slideWrapper">
+            <article>
+                <img class="default_image" src="viscovisco_boogie.jpg" />
+            </article>
+    
+            <article>
+                <img src="saucey.jpg"/>
+            </article>
+
+            <article>
+                <img src="sticks.jpg" />
+            </article>
+        
+            <article>
+                <img src="viscovisco_dance.jpg" />
+            </article>
+
+        </div>
+    </div>
+    </div>
+                            
+    <!-- Scripts -->  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="jquery.gallerySlide.js"></script>
+    <script>
+
+        var series = $('.series1')
+        var slides = series.find('article');
+        var img = slides[0].children[0]
+
+        var marginCenterWidth = series.width()/2 - img.offsetWidth/2;
+        var marginCenterHeight = $( window ).height()/2 - slides[0].clientHeight/2;
+        
+        var wrapperWidth = $('.series1').width()*2 * slides.length+1
+        slides[0].style.paddingRight=$('.series1').width()*2+"px"; //Kind of hacky...
+        slides.css('float', 'left');
+
+        $('.slideWrapper').css({
+            width: wrapperWidth,
+            marginLeft: marginCenterWidth,
+            visibility: 'visible'
+        });
+
+        $('#container').css({
+            marginTop: marginCenterHeight
+        });
+
+        $('.series1').slider();
+
+    </script>
+      
+<!-- END body -->
+</body>
+<!-- END html -->
+</html>
