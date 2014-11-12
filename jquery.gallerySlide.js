@@ -84,18 +84,14 @@
                     overflow: 'scroll'
                 })
 
-                $('body').bind('mousewheel', function(e) { // on scroll
+                var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel'
+
+                $('body').on(mousewheelevt, function(e) { // on scroll
                     $this.scrollLeft($this.scrollLeft() - e.originalEvent.wheelDelta);
                     if ($this[0].offsetWidth + $this[0].scrollLeft >= $this[0].scrollWidth) {
                         $this.scrollLeft(0);
-                        // wrapper.css({
-                        //     marginLeft: $this.width() - slides[0].offsetWidth - slides[1].children[0].offsetWidth
-                        // });
                     } else if ($this[0].scrollLeft <= 0) {
                         $this.scrollLeft($this[0].scrollWidth);
-                        // wrapper.css({
-                        //     marginLeft: $this.width() - slides[0].offsetWidth - slides[1].children[0].offsetWidth
-                        // });
                     }
                     return false; // prevent body scrolling
                 });
