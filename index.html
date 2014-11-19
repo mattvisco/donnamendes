@@ -5,83 +5,143 @@
 
   	<body>
 
-  		<div id="container">
-	  		<h1 id="test"> Donna Mendes </h1>
-	  		
+  		<div class="container">
+	        <img class="default_image" src="viscovisco_boogie.jpg" />
+	        <img class="default_image" src="viscovisco_dance.jpg" />
+	        <img class="default_image" src="saucey.jpg" />
+	        <img class="default_image" src="sticks.jpg" />
+	    </div>
 
-	  		<!-- <img id="default_painting" src="ACL50022.TIF" alt="default_painting"> -->
-	  		<table> 
-				<tr>
-			    	<td>
-			    		<img id="thumbnail_paintings" src="viscovisco_boogie.jpg" alt="default_painting">
-			    	</td>
-				</tr>
-			</table>
-		</div>
+	    <div id="footer">
+	        <div id="contact">
+	            Contact
+	        </div>
+	        <div id="copyright">
+	            ©2014
+	        </div>
+	    </div>
 
-		<script type="text/javascript">
+	    <!-- Scripts -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	    <script src="jquery.gallerySlide.js"></script>
+	    <script>
+	    	var isAnimating = false;
+	    	var defImg = $('.default_image');
+	    	var marginCenterWidth = 0;
+	    	var marginCenterHeight = 0;
 
-			var container = document.getElementById('container')
-			var thumbnails = document.getElementById('thumbnail_paintings')
-			var imgIndex = 0
-			var enlarged = false
-			var enabled = true
+	    	for ( var i = 0; i < defImg.length; i++ ) {
+	    		marginCenterWidth = $( window ).width()/2 - $(defImg[i]).width()/2;
+		        marginCenterHeight = $( window ).height()/2 - $(defImg[i]).height()/2;
+		        $(defImg[i]).css({
+		            marginTop: marginCenterHeight,
+		            marginBottom: marginCenterHeight,
+		            marginLeft: marginCenterWidth
+		        });
+	    	}
+	        
 
-			var dlTot = 0;
-			var pastDir = 0;
 
-			var test = document.getElementById('test')
 
-			var images=[
-    			"viscovisco_boogie.jpg",
-    			"viscovisco_dance.jpg",
-    			"saucey.jpg",
-    			"sticks.jpg"
-			]
+	        $('.container').css({ visibility: 'visible' });
+
+	        var scrollClickAction = function(e) {
+	            e = e || window.event;
+	            e.preventDefault();
+	            e.returnValue = false;
+
+
+	            if ( !isAnimating ) {
+	            	var wheel=(/Firefox/i.test(navigator.userAgent))? e.detail*-20: e.wheelDelta
+	            	var dir = 1;
+	            	if ( wheel < 0 ) {
+	            		dir = -1;
+	            	}
+	            	var wi = $('.container')[0].offsetHeight;
+	            	var dwi = $('.container').scrollTop();
+	            	var dsf = $('.container')[0].scrollHeight;
+	            	var cond = !( $('.container')[0].offsetHeight + $('.container').scrollTop() >= $('.container')[0].scrollHeight && dir == 1 )
+	            	if ( $('.container')[0].offsetHeight + $('.container').scrollTop() >= $('.container')[0].scrollHeight && dir == 1 || $('.container').scrollTop() <= 0 && dir == -1 ) {
+	            		// Do Nothing
+	            	} else {
+                    	isAnimating = true;
+                        $('.container').animate( {scrollTop: $('.container').scrollTop() + dir * $( window ).height()}, 1600, function(){
+	            			isAnimating = false;
+	            		});
+                    }
+	            	
+	            }
+
+        	}
+
+	        // Fuck firefox scroll -- FIGURE IT OUT DOH
+	        if (/Firefox/i.test(navigator.userAgent)) {
+	            window.DOMMouseScroll = document.DOMMouseScroll = scrollClickAction;
+	        } else {
+	            window.onmousewheel = document.onmousewheel  = scrollClickAction;
+	        }
+
+
+			// var container = document.getElementById('container')
+			// var thumbnails = document.getElementById('thumbnail_paintings')
+			// var imgIndex = 0
+			// var enlarged = false
+			// var enabled = true
+
+			// var dlTot = 0;
+			// var pastDir = 0;
+
+			// var test = document.getElementById('test')
+
+			// var images=[
+   //  			"viscovisco_boogie.jpg",
+   //  			"viscovisco_dance.jpg",
+   //  			"saucey.jpg",
+   //  			"sticks.jpg"
+			// ]
 
 			// function enlargeScrollImage(e){
 			// 	window.alert("test");
 			// }
 
-			function enlargeScrollImage(e){
-				window.alert("test");
-				if ( enabled ) {
-	    			var evt=window.event || e //equalize event object
-	    			var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta //delta returns +120 when wheel is scrolled up, -120 when scrolled down
+			// function enlargeScrollImage(e){
+			// 	if ( enabled ) {
+	  //   			var evt=window.event || e //equalize event object
+	  //   			var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta //delta returns +120 when wheel is scrolled up, -120 when scrolled down
 
-	    			if (enlarged) {
-	    				imgIndex = (delta>=0)? imgIndex+1 : imgIndex-1
-	    				imgIndex=(imgIndex<-1)? -1 : (imgIndex>images.length-1)? images.length-1 : imgIndex
+	  //   			if (enlarged) {
+	  //   				imgIndex = (delta>=0)? imgIndex+1 : imgIndex-1
+	  //   				imgIndex=(imgIndex<-1)? -1 : (imgIndex>images.length-1)? images.length-1 : imgIndex
 
-	    				if ( imgIndex == -1 ) {
-	    					thumbnails.style.height = '30%'
-	    					imgIndex = 0
-	    					enlarged = false
-	    				} else
-	    					thumbnails.src=images[imgIndex]
-	    				enabled = false
-	    				evt.detail = 0
-	    				evt.wheelDelta = 0
-	    				setTimeout(function(){enabled=true}, 800)
-	    			} else {
-	    				if(thumbnails && thumbnails.style && delta > 0) {
-	    					thumbnails.style.height = '500px'
-	    					enlarged = true
-	    					enabled = false
-	    					evt.detail = 0
-	    					evt.wheelDelta = 0
+	  //   				if ( imgIndex == -1 ) {
+	  //   					thumbnails.style.height = '30%'
+	  //   					imgIndex = 0
+	  //   					enlarged = false
+	  //   				} else
+	  //   					thumbnails.src=images[imgIndex]
+	  //   				enabled = false
+	  //   				evt.detail = 0
+	  //   				evt.wheelDelta = 0
+	  //   				setTimeout(function(){enabled=true}, 800)
+	  //   			} else {
+	  //   				if(thumbnails && thumbnails.style && delta > 0) {
+	  //   					thumbnails.style.height = '500px'
+	  //   					enlarged = true
+	  //   					enabled = false
+	  //   					evt.detail = 0
+	  //   					evt.wheelDelta = 0
 
-	    					setTimeout(function(){enabled=true}, 800)
-	    				}
-	    			}
-	    			test.innerHTML = imgIndex
+	  //   					setTimeout(function(){enabled=true}, 800)
+	  //   				}
+	  //   			}
+	  //   			test.innerHTML = imgIndex
 
-	    			if (evt.preventDefault) //disable default wheel action of scrolling page
-	        			evt.preventDefault()
-	    			else
-	        			return false
- 				}
-			}
+	  //   			if (evt.preventDefault) //disable default wheel action of scrolling page
+	  //       			evt.preventDefault()
+	  //   			else
+	  //       			return false
+ 		// 		}
+			// }
 
 			
 
@@ -129,12 +189,12 @@
  
 			// }
 
-			var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+			// var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
  
-			if (container.attachEvent) //if IE (and Opera depending on user setting)
-    			container.attachEvent("on"+mousewheelevt, enlargeScrollImage)
-			else if (container.addEventListener) //WC3 browsers
-    			container.addEventListener(mousewheelevt, enlargeScrollImage, false)
+			// if (container.attachEvent) //if IE (and Opera depending on user setting)
+   //  			container.attachEvent("on"+mousewheelevt, enlargeScrollImage)
+			// else if (container.addEventListener) //WC3 browsers
+   //  			container.addEventListener(mousewheelevt, enlargeScrollImage, false)
 
 
 		</script>

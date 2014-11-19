@@ -16,12 +16,32 @@ body {
     width: 100%;
 }
 
-#container {
-    margin-top: 10%;
+#header {
+   width: 75%;
+   position: fixed;left: 50%;
+   margin: 0 0 0 -6.5%;
+}
+
+#donnaTitle {
+    font-size: 35px;
+}
+
+#info_box {
+    top: 80px;
+    width: auto;
+    position: fixed;
+    display: inline-block;
+    text-align: left;
+    cursor: default;
+    font-size: 20px;
+}
+
+.container {
     display: block;
     height: 100vh;
     width: 100%;
     overflow: hidden;
+    visibility: hidden;
 }
 
 .slider{
@@ -30,12 +50,39 @@ body {
     overflow: hidden;
 }
 
+.default_image {
+    height: 200px;
+    cursor: pointer;
+}
+
 .slider .slideWrapper article img {
     max-width: 100%;
     width: auto;
     height: 500px;
 }
 
-.slideWrapper {
-    visibility: hidden;
+
+#footer {
+    clear: both;
+    position: absolute;
+    bottom: -40px;
+    height: 3em;
+    width: 100%;
+}
+
+#footer > div {
+    display: inline-block;
+}
+
+#copyright {
+    float: right;
+    padding-right: 100px;
+    cursor: default;
+    font-style: italic;
+}
+
+#series_back {
+    padding-left: 100px;
+    cursor: default;
+    font-style: italic;
 }

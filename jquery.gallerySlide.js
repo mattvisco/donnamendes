@@ -30,7 +30,7 @@
             var $this = $(this);
             var currentIndex = options.slideToStart;
             var wrapper = $this.find('.slideWrapper');
-            var defaultImage = $this.find('.default_image');
+            var defaultImage = $this.find('.default_image')[0];
             var slides = $this.find(options.slide);
             var slidesCount = slides.length;
                 
@@ -43,21 +43,22 @@
                 }
 
                 var screenWidth = $this.width()/2;
+
                 var startPhotoWidth = slides[1].children[0].offsetWidth/2;
 
                 var padRight = ( screenWidth - startPhotoWidth - slides[2].children[0].offsetWidth/8 );
-                var wrapperWidth = padRight;
                 slides[1].style.paddingRight=padRight+"px"
 
                 var slide0Width = slides[0].children[0].offsetWidth;
                 padRight = ( screenWidth - startPhotoWidth - slide0Width/8 );
-                wrapperWidth += padRight*slides.length-2
 
+                var wrapperWidth = 0;
                 for(var i = 0; i < slides.length-1; i++) {
                     if ( i != 1)
                         slides[i].style.paddingRight=padRight+"px"
-                    wrapperWidth += slides[i].children[0].offsetWidth;
+                    wrapperWidth += slides[i].offsetWidth;
                 }
+                wrapperWidth += slides[slides.length-1].offsetWidth +1;
 
                 var marginLeft = $this.width() - slides[0].offsetWidth - slides[1].children[0].offsetWidth;
                 var startPosition = slide0Width*7/8 + marginLeft;
@@ -84,25 +85,24 @@
                     overflow: 'scroll'
                 })
 
+                $(defaultImage).css( {cursor: "default"} );
+
                 var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel'
 
                 $('body').on(mousewheelevt, function(e) { // on scroll
-                    $this.scrollLeft($this.scrollLeft() - e.originalEvent.wheelDelta);
+                     var wheel=(/Firefox/i.test(navigator.userAgent))? e.originalEvent.detail*-20: e.originalEvent.wheelDelta
+                     $this.scrollLeft($this.scrollLeft() - wheel);
+
                     if ($this[0].offsetWidth + $this[0].scrollLeft >= $this[0].scrollWidth) {
                         $this.scrollLeft(0);
                     } else if ($this[0].scrollLeft <= 0) {
                         $this.scrollLeft($this[0].scrollWidth);
                     }
-                    return false; // prevent body scrolling
+                    return true;
                 });
             }
 
-            defaultImage.click(function(){
-                if (!options.initialized) {
-                    init();            
-                    options.initialized = true;
-                }
-            })
+            init();
                                                 
             /* Bind Events
             ================================================== */

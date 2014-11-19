@@ -24,69 +24,248 @@
 
 <!-- BEGIN body -->
 <body>
-
-    <!-- <div id="container">
-        <div class="slider series1">
-            <div class="slideWrapper">
-                <article class="default_image">
-                    <img  src="viscovisco_boogie.jpg" />
-                </article>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- TESTING PURPOSES -->
-    <div id="container">
-    <div class="slider series1">
-        <div class="slideWrapper">
-            <article>
-                <img class="default_image" src="viscovisco_boogie.jpg" />
-            </article>
-    
-            <article>
-                <img src="saucey.jpg"/>
-            </article>
-
-            <article>
-                <img src="sticks.jpg" />
-            </article>
-        
-            <article>
-                <img src="viscovisco_dance.jpg" />
-            </article>
-
+    <div id="header">
+        <div id="info_box">
+            <span id="donnaTitle">Donna Mendes</span>
         </div>
     </div>
+    <div class="container">
+        <img class="default_image" onclick= 'scrollClickAction()' src="viscovisco_boogie.jpg" />
     </div>
-                            
-    <!-- Scripts -->  
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> -->
+
+    <div id="footer">
+        <div id="series_back">
+            Boogie
+        </div>
+        <div id="copyright">
+            ©2014
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="jquery.gallerySlide.js"></script>
     <script>
 
-        var series = $('.series1')
-        var slides = series.find('article');
-        var img = slides[0].children[0]
+        var entered = false;
 
-        var marginCenterWidth = series.width()/2 - img.offsetWidth/2;
-        var marginCenterHeight = $( window ).height()/2 - slides[0].clientHeight/2;
-        
-        var wrapperWidth = $('.series1').width()*2 * slides.length+1
-        slides[0].style.paddingRight=$('.series1').width()*2+"px"; //Kind of hacky...
-        slides.css('float', 'left');
-
-        $('.slideWrapper').css({
-            width: wrapperWidth,
-            marginLeft: marginCenterWidth,
-            visibility: 'visible'
+        $( "#info_box" ).mouseenter(function() {
+            if (!entered) {
+                entered = true;
+                $('#info_box').append("<div id='info'><div id='info_title'>info</div></div>")
+                $( "#info" ).mouseenter(function() {
+                    $('#info').append("<div id='info_content'>some shit being said heer</div>")
+                    $('#info_title').css({fontStyle: 'italic'})
+                });
+                $( "#info" ).mouseleave(function() {
+                    $('#info_content').remove();
+                    $('#info_title').css({fontStyle: 'normal'})
+                });
+                $('#info_box').append("<div id='blog'><div id='blog_title'>blog</div></div>")
+                $( "#blog" ).mouseenter(function() {
+                    $('#blog').append("<div id='blog_content'>Dis Right Heerr is a BLOG</div>")
+                    $('#blog_title').css({fontStyle: 'italic'})
+                });
+                $( "#blog" ).mouseleave(function() {
+                    $('#blog_content').remove();
+                    $('#blog_title').css({fontStyle: 'normal'})
+                });
+                $('#info_box').append("<div id='contact'><div id='contact_title'>contact</div></div>")
+                $( "#contact" ).mouseenter(function() {
+                    $('#contact').append("<div id='contact_content'>donnamendes@mac.com</div>")
+                    $('#contact_title').css({fontStyle: 'italic'})
+                });
+                $( "#contact" ).mouseleave(function() {
+                    $('#contact_content').remove();
+                    $('#contact_title').css({fontStyle: 'normal'})
+                });
+                $('#info_box').css({backgroundColor: 'white'})
+                $('#donnaTitle').css({fontStyle: 'italic'})
+            }
         });
 
-        $('#container').css({
-            marginTop: marginCenterHeight
+        $( "#info_box" ).mouseleave(function() {
+            $('#info').remove();
+            $('#blog').remove();
+            $('#contact').remove();
+            $('#info_box').css({backgroundColor: 'transparent'})
+            $('#donnaTitle').css({fontStyle: 'normal'})
+            entered = false;
         });
 
-        $('.series1').slider();
+        var enlarged = false
+        var seriesView = false
+
+        var seriesIndex = 0;
+        var seriesTexts = ['<div class="container">' + '<div class="slider series1">'+ '<div class="slideWrapper">'
+                + '<article>' + '<img class="default_image" src="viscovisco_boogie.jpg" />' +'</article>'
+                + '<article>' + '<img src="viscovisco_dance.jpg" />' +'</article>' +'<article>' +
+                '<img src="saucey.jpg" />' +'</article>' + '<article>' +
+                '<img src="sticks.jpg" />' + '</article>' + '</div>' + '</div>' + '</div>',
+
+                '<div class="container">' + '<div class="slider series2">'+ '<div class="slideWrapper">'
+                + '<article>' + '<img class="default_image" src="sticks.jpg" />' +'</article>'
+                + '<article>' + '<img src="saucey.jpg" />' +'</article>' +'<article>' +
+                '<img src="viscovisco_dance.jpg" />' +'</article>' + '<article>' +
+                '<img src="viscovisco_boogie.jpg" />' + '</article>' + '</div>' + '</div>' + '</div>',
+
+                '<div class="container">' + '<div class="slider series3">'+ '<div class="slideWrapper">'
+                + '<article>' + '<img class="default_image" src="saucey.jpg" />' +'</article>'
+                + '<article>' + '<img src="viscovisco_boogie.jpg" />' +'</article>' +'<article>' +
+                '<img src="sticks.jpg" />' +'</article>' + '<article>' +
+                '<img src="viscovisco_dance.jpg" />' + '</article>' + '</div>' + '</div>' + '</div>',
+
+                '<div class="container">' + '<div class="slider series4">'+ '<div class="slideWrapper">'
+                + '<article>' + '<img class="default_image" src="viscovisco_dance.jpg" />' +'</article>'
+                + '<article>' + '<img src="viscovisco_boogie.jpg" />' +'</article>' +'<article>' +
+                '<img src="saucey.jpg" />' +'</article>' + '<article>' +
+                '<img src="sticks.jpg" />' + '</article>' + '</div>' + '</div>' + '</div>'];
+
+        var seriesSet = '<div class="container">' + '<img class="default_image" src="viscovisco_boogie.jpg" />' 
+                    + '<img class="default_image" src="sticks.jpg" />' + '<img class="default_image" src="saucey.jpg" />'
+                    + '<img class="default_image" src="viscovisco_dance.jpg" />' + '</div>';
+
+        var series = ['.series1', '.series2', '.series3', '.series4'];
+        var seriesNames = ['Boogie', 'Till', 'You', 'Barf'];
+        var container = "div.container";
+
+        var defImages = $('.default_image');
+        var isAnimating = false;
+        var marginCenterWidth = 0;
+        var marginCenterHeight = 0;
+        var currScrollPosition = 0;
+
+        var setSeriesPosition = function() {
+            
+            for ( var i = 0; i < defImages.length; i++ ) {
+                if (enlarged)
+                    $(defImages[i]).css({height:500})
+                marginCenterWidth = $( window ).width()/2 - $(defImages[i]).width()/2;
+                marginCenterHeight = $( window ).height()/2 - $(defImages[i]).height()/2;
+                $(defImages[i]).css({
+                    marginTop: marginCenterHeight,
+                    marginBottom: marginCenterHeight,
+                    marginLeft: marginCenterWidth
+                });
+            }
+
+            $('.container').css({ visibility: 'visible' });
+            $('.container').scrollTop(currScrollPosition)
+        };
+
+        setSeriesPosition();
+
+        var seriesBack = $('#series_back')[0];
+        $(seriesBack).click(function(){
+            if ( seriesView ) {
+                this.innerText = seriesNames[seriesIndex];
+                $('#series_back').css( {cursor: "default"} );
+                $('#series_back').css({fontStyle: 'italic'})
+                seriesView = false;
+                initializeDefault();
+            }
+            //TODO: turn off click ability change cursor back
+        });
+
+
+        var footer = document.getElementById('footer');
+
+        var scrollClickAction = function(e) {
+            e = e || window.event;
+            e.preventDefault();
+            e.returnValue = false;
+            
+            if ( !enlarged ) {
+                isAnimating = true;
+
+                $(footer).animate({ bottom: 30 }, 1000);
+
+                var factor = 2.5;
+                marginCenterHeight = $( window ).height()/2 - $(defImages[0]).height()/2 * factor;
+                marginCenterWidth = $( window ).width()/2 - $(defImages[0]).width()/2 * factor;
+                
+                $(defImages[0]).animate( {marginTop: marginCenterHeight, marginLeft: marginCenterWidth, height: $(defImages[0]).height() * factor}, 1000, initializeDefault);
+
+                enlarged = true;
+            } else {
+                if ( !isAnimating ) {
+                    var wheel=(/Firefox/i.test(navigator.userAgent))? e.detail*-20: e.wheelDelta
+                    var dir = 1;
+                    if ( wheel < 0 ) {
+                        dir = -1;
+                    }
+                    if ( $('.container')[0].offsetHeight + $('.container').scrollTop() >= $('.container')[0].scrollHeight && dir == 1 || $('.container').scrollTop() <= 0 && dir == -1 ) {
+                        // Do Nothing
+                    } else {
+                        isAnimating = true;
+                        currScrollPosition = $('.container').scrollTop() + dir * $( window ).height();
+                        //TODO: make photos unclickable during animation
+                        $('.container').animate( {scrollTop: currScrollPosition}, 1600, function(){
+                            isAnimating = false;
+                            seriesIndex += dir;
+                            $('#series_back')[0].innerText = seriesNames[seriesIndex];
+                        });
+                    }
+                    
+                }
+            }
+        }
+
+        var initializeDefault = function() {
+            $(container).replaceWith(seriesSet);
+            defImages = $('.default_image');
+            setSeriesPosition();
+            setTimeout(function(){setSeriesPosition()}, 40); //Real hacky -- this is for chrome, it needs time to load images
+
+            defImages.click(function(){
+                if ( !isAnimating ) {
+                    seriesView = true;
+                    swapSeriesText();
+                    seriesBack.innerText = "Back";
+                    $('#series_back').css({
+                        cursor: "pointer",
+                        fontStyle: 'normal'
+                    });
+                }
+            });
+            isAnimating = false;
+        }
+
+        var swapSeriesText = function() {
+            var container = "div.container";
+            var currentSeriesText = seriesTexts[seriesIndex];
+            var currentSeries = series[seriesIndex]
+
+            $(container).replaceWith(currentSeriesText);
+
+
+            slides = $(currentSeries).find('article');
+            img = slides[0].children[0]
+
+            marginCenterWidth = $(currentSeries).width()/2 - img.offsetWidth/2;
+            marginCenterHeight = $( window ).height()/2 - img.offsetHeight/2;
+
+            wrapperWidth = $(currentSeries).width()*2 * slides.length+1
+            slides[0].style.paddingRight= $(currentSeries).width()*2+"px"; //Kind of hacky...
+            slides.css('float', 'left');
+
+            $('.container').css({ marginTop: marginCenterHeight });
+            $('.slideWrapper').css({
+                width: wrapperWidth,
+                marginLeft: marginCenterWidth,
+                visibility: 'visible'
+            });
+
+            setTimeout(function(){$(currentSeries).slider()}, 20); //Real hacky -- this is for chrome, it needs time to load images
+
+        }
+
+        // Fuck firefox scroll -- FIGURE IT OUT DOH
+        if (/Firefox/i.test(navigator.userAgent)) {
+            window.DOMMouseScroll = document.DOMMouseScroll = scrollClickAction;
+        } else {
+            window.onmousewheel = document.onmousewheel  = scrollClickAction;
+        }
 
     </script>
       
