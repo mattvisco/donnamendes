@@ -17,9 +17,10 @@ body {
 }
 
 #header {
-   width: 75%;
-   position: fixed;left: 50%;
-   margin: 0 0 0 -6.5%;
+   width: 100%;
+   position: fixed;
+   visibility: hidden;
+   z-index: 999;
 }
 
 #donnaTitle {
@@ -34,6 +35,7 @@ body {
     text-align: left;
     cursor: default;
     font-size: 20px;
+    z-index: 999;
 }
 
 .container {
@@ -78,7 +80,6 @@ body {
     float: right;
     padding-right: 100px;
     cursor: default;
-    font-style: italic;
 }
 
 #series_back {

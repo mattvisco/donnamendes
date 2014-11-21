@@ -33,6 +33,8 @@
             var defaultImage = $this.find('.default_image')[0];
             var slides = $this.find(options.slide);
             var slidesCount = slides.length;
+            var resizing = false;
+            var slideAmount = 0;
                 
             // /* Resize Slider
             // ================================================== */ 
@@ -61,26 +63,36 @@
                 wrapperWidth += slides[slides.length-1].offsetWidth +1;
 
                 var marginLeft = $this.width() - slides[0].offsetWidth - slides[1].children[0].offsetWidth;
-                var startPosition = slide0Width*7/8 + marginLeft;
+
+                
+                if ( !resizing )
+                    slideAmount = slide0Width*7/8 + marginLeft;
+                else {
+                    var marginTop = Math.max(options.marginTopMin,$( window ).height()/2 - slides[0].children[0].offsetHeight/2);
+                    $('.container').css({ marginTop: marginTop });
+                    options.headerResize();
+                }
                 wrapper.css({
                     width: wrapperWidth,
                     marginLeft: marginLeft,
                     visibility: 'visible'
                 });
-                $this.scrollLeft(startPosition);
+                $this.scrollLeft(slideAmount);
+                
             };
 
             /* Init Slider
             ================================================== */ 
             var init = function() {
-
-                slides.css('float', 'left');        
-
+                      
                 wrapper.prepend($(slides[slidesCount-1]).clone());
-                wrapper.append($(slides[0]).clone());
+                wrapper.prepend($(slides[slidesCount-2]).clone());
                 slides = $this.find(options.slide);
 
+                slides.css('float', 'left');  
+
                 resize();
+                resizing = true;
                 $this.css({
                     overflow: 'scroll'
                 })
@@ -91,7 +103,8 @@
 
                 $('body').on(mousewheelevt, function(e) { // on scroll
                      var wheel=(/Firefox/i.test(navigator.userAgent))? e.originalEvent.detail*-20: e.originalEvent.wheelDelta
-                     $this.scrollLeft($this.scrollLeft() - wheel);
+                     slideAmount = $this.scrollLeft() - wheel;
+                     $this.scrollLeft(slideAmount);
 
                     if ($this[0].offsetWidth + $this[0].scrollLeft >= $this[0].scrollWidth) {
                         $this.scrollLeft(0);
@@ -103,14 +116,18 @@
             }
 
             init();
-                                                
+
+            options.backButton.click(function(){
+                $(window).off("resize", resize);
+            });
+                                      
             /* Bind Events
             ================================================== */
             // Resize
 
             //TODO -- develop a clean way for the window to be resized and slideshow to still work well
-            //$(window).resize(resize);
-
+            $(window).resize(resize);
+            
                         
         });
     }
