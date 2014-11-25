@@ -228,13 +228,9 @@
 		        if ( !enlarged ) {
 
 		            isAnimating = true;
+		            enlarged = true;
 
-		            // Timeout for Firefox -- ensure the first event scroll event finishes
-		            if (/Firefox/i.test(navigator.userAgent) && !click) {
-		                setTimeout(enlargeDefaultImage, 400);
-		            } else {
-		                enlargeDefaultImage();
-		            }
+		            enlargeDefaultImage();
 		        } else {
 		            if ( !isAnimating ) {
 		                var wheel=(/Firefox/i.test(navigator.userAgent))? e.detail*-20: e.wheelDelta
@@ -262,14 +258,14 @@
 
         // Enlarge default image by the enlarge factor set above
         var enlargeDefaultImage = function() {
-            $(footer).animate({ bottom: 30 }, 1000);
 
             marginTop = Math.max(marginTopMin, $( window ).height()/2 - $(defImages[0]).height()/2 * enlargeFactor);
             marginLeft = $( window ).width()/2 - $(defImages[0]).width()/2 * enlargeFactor;
             
-            $(defImages[0]).animate( {marginTop: marginTop, marginLeft: marginLeft, height: $(defImages[0]).height() * enlargeFactor}, 1000, initializeDefault);
+            var footerSpace = $( window ).height() - marginTop - $(defImages[0]).height() * enlargeFactor - $( "#info_box" ).height() - $( "#info_box" )[0].offsetTop;
+            $(footer).animate({ bottom: footerSpace * .1 }, 1000);
 
-            enlarged = true;
+            $(defImages[0]).animate( {marginTop: marginTop, marginLeft: marginLeft, height: $(defImages[0]).height() * enlargeFactor}, 1000, initializeDefault);
         }
 
         /* Set series mode to switch to scroll view when clicked
