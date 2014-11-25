@@ -105,7 +105,7 @@
                 var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel'
 
                 $('body').on(mousewheelevt, function(e) { // on scroll
-                     var wheel=(/Firefox/i.test(navigator.userAgent))? e.originalEvent.detail*-20: e.originalEvent.wheelDelta
+                     var wheel=(/Firefox/i.test(navigator.userAgent))? e.originalEvent.detail*-20: e.originalEvent.wheelDeltaX
                      slideAmount = $this.scrollLeft() - wheel;
                      $this.scrollLeft(slideAmount);
 

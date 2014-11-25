@@ -58,7 +58,7 @@
         var scrollCounter = 0;
         // Amount image enlarges by
         var enlargeFactor = 2.5;
-        
+
         var marginLeft = 0;
         var marginTop = 0;
         var marginBottom = 0;
@@ -217,19 +217,19 @@
             if ( e ) {
                 e.preventDefault();
                 e.returnValue = false;
-                click = false;
+                if ( e.type == 'DOMMouseScroll' || e.type == 'mousewheel' )
+	                click = false;
             } 
 
             scrollCounter+=1;
 
-            if ( scrollCounter > scrollThreshold ) {
+            if ( scrollCounter > scrollThreshold || click ) {
             	scrollCounter = 0;
 		        if ( !enlarged ) {
 
 		            isAnimating = true;
 
-		            // Kinda hacky... done because in firefox the mouseevent last too long
-		            // need a timeout to watch until the first event is done
+		            // Timeout for Firefox -- ensure the first event scroll event finishes
 		            if (/Firefox/i.test(navigator.userAgent) && !click) {
 		                setTimeout(enlargeDefaultImage, 400);
 		            } else {
@@ -279,7 +279,7 @@
             setSeriesPosition();
             setTimeout(setSeriesPosition, 40); //For chrome, it needs time to load images
             $(window).resize(setupInitialPosition);
-            scrollCounter = 0;
+            setScrollListeners();
 
             defImages.click(function(){
                 if ( !isAnimating ) {
@@ -291,6 +291,7 @@
                         cursor: "pointer",
                         fontStyle: 'normal'
                     });
+                    resetScroll();
                 }
             });
             isAnimating = false;
@@ -329,18 +330,39 @@
 
         /* Set scroll listeners for browsers
             ================================================== */ 
-        if (/Firefox/i.test(navigator.userAgent)) {
-            window.addEventListener('DOMMouseScroll', scrollClickAction, false);
-            window.addEventListener("keydown", function(e) {
-                // space and arrow keys
-                if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-                    e.preventDefault();
-                }
-            }, false);
-        } else {
-            window.onmousewheel = scrollClickAction;
-        }
+        var setScrollListeners = function() {
+        	scrollCounter = 0;
+	        if (/Firefox/i.test(navigator.userAgent)) {
+	            window.addEventListener('DOMMouseScroll', scrollClickAction, false);   
+	        } else {
+	            window.onmousewheel = scrollClickAction;
+	        }
+    	}
 
+    	var resetScroll = function() {
+    		var preventFunction = function(e) {
+    			e = e || window.event;
+                e.preventDefault();
+                e.returnValue = false;
+    		}
+	        if (/Firefox/i.test(navigator.userAgent)) {
+	            window.addEventListener('DOMMouseScroll', preventFunction, false);   
+	        } else {
+	            window.onmousewheel = preventFunction;
+	        }
+    	}
+
+
+    	if (/Firefox/i.test(navigator.userAgent)) {
+	    	window.addEventListener("keydown", function(e) {
+	            // space and arrow keys
+	            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+	                e.preventDefault();
+	            }
+	        }, false);
+    	}
+
+    	setScrollListeners();
     </script>
       
 <!-- END body -->
