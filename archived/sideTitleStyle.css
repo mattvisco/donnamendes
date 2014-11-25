@@ -1,0 +1,21 @@
+.suck_it {
+	position: absolute;
+	/*float: left;
+	height: auto;*/
+	/*width: 500px;*/
+	/*500px;*/
+	vertical-align: middle;
+	text-align: middle;
+	-webkit-transform-origin: bottom right;
+	-webkit-transform: rotate(-90deg);
+
+}
+
+img {
+	position: absolute;
+	vertical-align: middle;
+	text-align: middle;
+	height: 500px;
+	top: 100;
+	left: 500;
+}

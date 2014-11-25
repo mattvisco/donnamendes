@@ -1,0 +1,97 @@
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    
+    <!-- Title -->
+    <title>gallery test</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="demo.css" type="text/css" media="screen" />
+
+</head>
+
+  	<body>
+  		<div id="container">
+    	<div class="wmuSlider series1">
+	        <div class="smallImageWrapper">
+	            <article>
+	                <img id="default_image" src="viscovisco_boogie.jpg" />
+	            </article>
+	        </div>
+    	</div>
+    	</div>
+   
+  	</body>
+
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="jquery.gallery.js"></script>
+    <script>
+
+    	var enlarged = false
+		var enabled = true
+
+    	var seriesIndex = 0;
+    	var seriesTexts = ['<div class="wmuSlider series1">'+ '<div class="wmuSliderWrapper">'
+		        + '<article>' + '<img class="default_image" src="viscovisco_boogie.jpg" />' +'</article>'
+		    	+ '<article>' + '<img src="viscovisco_dance.jpg" />' +'</article>' +'<article>' +
+		        '<img src="saucey.jpg" />' +'</article>' + '<article>' +
+		        '<img src="sticks.jpg" />' + '</article>' + '</div>' + '</div>',
+
+    			'<div class="wmuSlider series2">'+ '<div class="wmuSliderWrapper">'
+		        + '<article>' + '<img class="default_image" src="sticks.jpg" />' +'</article>'
+		    	+ '<article>' + '<img src="saucey.jpg" />' +'</article>' +'<article>' +
+		        '<img src="viscovisco_dance.jpg" />' +'</article>' + '<article>' +
+		        '<img src="viscovisco_boogie.jpg" />' + '</article>' + '</div>' + '</div>',
+
+		        '<div class="wmuSlider series3">'+ '<div class="wmuSliderWrapper">'
+		        + '<article>' + '<img class="default_image" src="saucey.jpg" />' +'</article>'
+		    	+ '<article>' + '<img src="viscovisco_boogie.jpg" />' +'</article>' +'<article>' +
+		        '<img src="sticks.jpg" />' +'</article>' + '<article>' +
+		        '<img src="viscovisco_dance.jpg" />' + '</article>' + '</div>' + '</div>'];
+
+		var series = ['.series1', '.series2', '.series3'];
+
+        window.onmousewheel = document.onmousewheel = function(e) {
+    		e = e || window.event;
+    		e.preventDefault();
+    		e.returnValue = false;
+    		if ( enabled ) {
+    			var delta=e.detail? e.detail*(-120) : e.wheelDelta;
+
+    			if (enlarged) {
+    				var prevIndex = seriesIndex;
+    				var divPrevSeries = "div" + series[seriesIndex]; 
+    				
+    				seriesIndex = (delta>=0)? seriesIndex+1 : seriesIndex-1
+    				seriesIndex=(seriesIndex<0)? 0 : (seriesIndex>series.length-1)? series.length-1 : seriesIndex
+
+    				if ( seriesIndex != prevIndex ) {
+	    				var currentSeriesText = seriesTexts[seriesIndex];
+			        	var currentSeries = series[seriesIndex];
+
+				        $(divPrevSeries).replaceWith(currentSeriesText);
+				        $(currentSeries).wmuSlider();
+						enabled = false
+						setTimeout(function(){enabled=true}, 1500)
+					}
+	    		} else {
+	    			var defaultImage = document.getElementById("default_image")
+	    			if(delta > 0) {
+	    				var divPrevSeries = "div" + series[seriesIndex];
+	    				var currentSeriesText = seriesTexts[seriesIndex];
+			        	var currentSeries = series[seriesIndex];
+
+				        $(divPrevSeries).replaceWith(currentSeriesText);
+				        $(currentSeries).wmuSlider();
+						enabled = false
+						enlarged = true
+						setTimeout(function(){enabled=true}, 1500)
+	    			}
+	    		}
+    		}
+		};
+
+    </script>
+
+ </html>

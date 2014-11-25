@@ -1,0 +1,39 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="sideTitleStyle.css">
+    <title>Donna Mendes</title>
+</head>
+
+  	<body>
+  		<!-- <span class="suck_it">Suck It Test</span> -->
+  		 <article><span class="suck_it">Suck It Test</span><img class="default_image" src="viscovisco_boogie.jpg" /></article>
+		<!-- <article>
+		<div>
+		    <img src="viscovisco_boogie.jpg" style="vertical-align: middle;"/>
+		    <span class="suck_it">Here is some text.</span>
+		</div>
+		</article> -->
+  		<!-- <div class="suck_it">Suck It Test</div> -->
+
+  		<!-- <div class="container">
+	        <article><div class="suck_it">Suck It Test</div><img class="default_image" src="viscovisco_boogie.jpg" /></article>
+	        <img class="default_image" src="viscovisco_dance.jpg" />
+	        <img class="default_image" src="saucey.jpg" />
+	        <img class="default_image" src="sticks.jpg" />
+	    </div> -->
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="jquery.gallerySlide.js"></script>
+    <script>
+    	// var w = $(.default_image)//.height();
+    	// $(.suck_it).css({
+    	// 	width: w;
+    	// })
+		var position = $('.default_image').position();
+		$('.suck_it').css({
+			top: position.top + $('.default_image').height()/2 - $('.suck_it').width()/2,
+			left: position.left - $('.suck_it').width()
+		});
+    </script>
+
+</html>
