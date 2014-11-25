@@ -26,7 +26,6 @@
             var slidesCount = slides.length;
             var resizing = false;
             var slideAmount = 0;
-                
             // /* Resize Slider
             // ================================================== */ 
             var resize = function() {
@@ -60,6 +59,12 @@
                 else {
                     $('.container').css({ marginTop: marginTop });
                     options.headerResize();
+
+                    var footerSpace = $( window ).height() - marginTop - $(slides[0].children[1]).height() - 40;
+                    var footerFinalPosition = footerSpace * .1;
+                    if ( footerSpace < 10 )
+                        footerFinalPosition = Math.max(-30,footerSpace-10);
+                    $(options.footer).css({ bottom: footerFinalPosition });
                 }
 
                 

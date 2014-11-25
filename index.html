@@ -65,9 +65,12 @@
         var TITLEPADDING = 10;
         var marginTopMin = $('#info_box').height() + $('#info_box').position().top + TITLEPADDING;
         var currScrollPosition = 0;
+        var footerSpace = -40;
+        var footerFinalPosition = -30;
         
         var container = "div.container";
         var defImages = $('.default_image');
+        var footer = document.getElementById('footer');
 
         // Index of current series being viewed
         var seriesIndex = 0;
@@ -153,6 +156,7 @@
             entered = false;
         });
         
+        
         /* Set initial position of elements displayed
             ================================================== */ 
         var setSeriesPosition = function() {
@@ -171,8 +175,14 @@
             }
 
             $('.container').css({visibility: 'visible'});
-            if (resizing)
+            if (resizing) {
                 currScrollPosition = seriesIndex * (marginTop + marginBottom + $(defImages[seriesIndex]).height() );
+            	footerSpace = $( window ).height() - marginTop - $(defImages[0]).height() - 40;
+           		footerFinalPosition =footerSpace * .1;
+          	  	if ( footerSpace < 10 )
+                	footerFinalPosition = Math.max(-30,footerSpace-10);
+            	$(footer).css({ bottom: footerFinalPosition });
+            }
             $('.container').scrollTop(currScrollPosition)
         };
 
@@ -208,7 +218,7 @@
 
         /* Set scroll to enlarge or switch series
             ================================================== */ 
-        var footer = document.getElementById('footer');
+        
 
         var scrollClickAction = function(e) {
             e = e || window.event;
@@ -262,9 +272,12 @@
             marginTop = Math.max(marginTopMin, $( window ).height()/2 - $(defImages[0]).height()/2 * enlargeFactor);
             marginLeft = $( window ).width()/2 - $(defImages[0]).width()/2 * enlargeFactor;
             
-            var footerSpace = $( window ).height() - marginTop - $(defImages[0]).height() * enlargeFactor - $( "#info_box" ).height() - $( "#info_box" )[0].offsetTop;
-            $(footer).animate({ bottom: footerSpace * .1 }, 1000);
-
+            footerSpace = $( window ).height() - marginTop - $(defImages[0]).height() * enlargeFactor - 40;
+            footerFinalPosition = footerSpace * .1;
+            if ( footerSpace < 10 )
+            	footerFinalPosition = Math.max(-30,footerSpace-10);
+            
+            $(footer).animate({ bottom: footerFinalPosition }, 1000);
             $(defImages[0]).animate( {marginTop: marginTop, marginLeft: marginLeft, height: $(defImages[0]).height() * enlargeFactor}, 1000, initializeDefault);
         }
 
@@ -321,7 +334,7 @@
                 visibility: 'visible'
             });
 
-            setTimeout(function(){$(currentSeries).slider( { backButton: $($('#series_back')[0]), marginTopMin: marginTopMin, headerResize: setHeaderPosition })}, 20); //For chrome, it needs time to load images
+            setTimeout(function(){$(currentSeries).slider( { backButton: $($('#series_back')[0]), marginTopMin: marginTopMin, headerResize: setHeaderPosition, footer: footer })}, 20); //For chrome, it needs time to load images
 
         }
 
