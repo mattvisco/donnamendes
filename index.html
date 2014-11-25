@@ -250,7 +250,8 @@
 		                    $('.container').animate( {scrollTop: currScrollPosition}, 1600, function(){
 		                        isAnimating = false;
 		                        seriesIndex += dir;
-		                        $('#series_back')[0].innerText = seriesNames[seriesIndex];
+		                        var test = $('#series_back')[0];
+		                        $('#series_back')[0].innerHTML = seriesNames[seriesIndex];
 		                    });
 		                }
 		                
