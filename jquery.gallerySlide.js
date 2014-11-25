@@ -1,12 +1,3 @@
-/*!
- * jQuery wmuSlider v2.1.
- * 
- * Copyright (c) 2011 Brice Lechatellier
- * http://brice.lechatellier.com/
- *
- * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
- */
-
 ;(function($) {
 
 
@@ -45,14 +36,13 @@
                 }
 
                 var screenWidth = $this.width()/2;
-
-                var startPhotoWidth = slides[1].children[0].offsetWidth/2;
-
-                var padRight = ( screenWidth - startPhotoWidth - slides[2].children[0].offsetWidth/8 );
+                var startPhotoWidth = $(slides[1].children[1]).width()/2;
+                var ratioSlide1 = 50/$(slides[2].children[1]).width()
+                var padRight = ( screenWidth - startPhotoWidth - $(slides[2].children[1]).width()*ratioSlide1);
                 slides[1].style.paddingRight=padRight+"px"
-
-                var slide0Width = slides[0].children[0].offsetWidth;
-                padRight = ( screenWidth - startPhotoWidth - slide0Width/8 );
+                var slide0Width = $(slides[0].children[1]).width();
+                var ratioSlide0 = 50/slide0Width;
+                padRight = ( screenWidth - startPhotoWidth - slide0Width*ratioSlide0);
 
                 var wrapperWidth = 0;
                 for(var i = 0; i < slides.length-1; i++) {
@@ -62,22 +52,35 @@
                 }
                 wrapperWidth += slides[slides.length-1].offsetWidth +1;
 
-                var marginLeft = $this.width() - slides[0].offsetWidth - slides[1].children[0].offsetWidth;
-
+                var marginLeft = $this.width() - slides[0].offsetWidth - slides[1].children[1].offsetWidth;
+                var marginTop = Math.max(options.marginTopMin,$( window ).height()/2 - slides[0].children[1].offsetHeight/2);
                 
                 if ( !resizing )
-                    slideAmount = slide0Width*7/8 + marginLeft;
+                    slideAmount = slide0Width*(1-ratioSlide0) - slides[0].children[0].offsetHeight + marginLeft;
                 else {
-                    var marginTop = Math.max(options.marginTopMin,$( window ).height()/2 - slides[0].children[0].offsetHeight/2);
                     $('.container').css({ marginTop: marginTop });
                     options.headerResize();
                 }
+
+                
                 wrapper.css({
                     width: wrapperWidth,
                     marginLeft: marginLeft,
                     visibility: 'visible'
                 });
                 $this.scrollLeft(slideAmount);
+
+                for(var i = 0; i < slides.length-1; i++) {
+                    if ( i != 1 ) {
+                        var top =  $(slides[i].children[1]).height()/2 - $(slides[i].children[0]).width()/2;
+                        var left = $(slides[i].children[1]).position().left + slideAmount - $(slides[i].children[0]).width();
+                        $(slides[i].children[0]).css({
+                            top: top,
+                            left: left,
+                            visibility: 'visible'
+                        });
+                    }
+                }
                 
             };
 
@@ -124,8 +127,6 @@
             /* Bind Events
             ================================================== */
             // Resize
-
-            //TODO -- develop a clean way for the window to be resized and slideshow to still work well
             $(window).resize(resize);
             
                         

@@ -1,204 +1,349 @@
+<!DOCTYPE html>
+
+<!-- BEGIN html -->
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+
+<!-- BEGIN head-->
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    
+    <!-- Title -->
     <title>Donna Mendes</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+            
+<!-- END head -->
 </head>
 
-  	<body>
+<!-- BEGIN body -->
+<body>
+    <div id="header">
+        <div id="info_box">
+            <div id="donnaTitle">Donna Mendes</div>
+        </div>
+    </div>
+    <div class="container">
+        <img class="default_image" onclick= 'scrollClickAction()' src="viscovisco_boogie.jpg" />
+    </div>
 
-  		<div class="container">
-	        <img class="default_image" src="viscovisco_boogie.jpg" />
-	        <img class="default_image" src="viscovisco_dance.jpg" />
-	        <img class="default_image" src="saucey.jpg" />
-	        <img class="default_image" src="sticks.jpg" />
-	    </div>
+    <div id="footer">
+        <div id="series_back">
+            Boogie
+        </div>
+        <div id="copyright">
+            ©2014
+        </div>
+    </div>
 
-	    <div id="footer">
-	        <div id="contact">
-	            Contact
-	        </div>
-	        <div id="copyright">
-	            ©2014
-	        </div>
-	    </div>
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="jquery.gallerySlide.js"></script>
+    <script>
 
-	    <!-- Scripts -->
-	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	    <script src="jquery.gallerySlide.js"></script>
-	    <script>
-	    	var isAnimating = false;
-	    	var defImg = $('.default_image');
-	    	var marginCenterWidth = 0;
-	    	var marginCenterHeight = 0;
+        var entered = false;
+        var enlarged = false;
+        var seriesView = false;
+        var resizing = false;
+        var isAnimating = false;
 
-	    	for ( var i = 0; i < defImg.length; i++ ) {
-	    		marginCenterWidth = $( window ).width()/2 - $(defImg[i]).width()/2;
-		        marginCenterHeight = $( window ).height()/2 - $(defImg[i]).height()/2;
-		        $(defImg[i]).css({
-		            marginTop: marginCenterHeight,
-		            marginBottom: marginCenterHeight,
-		            marginLeft: marginCenterWidth
-		        });
-	    	}
-	        
+        // ScrollThresh and Counter limit unwanted scroll events triggering
+        var scrollThreshold = 15;
+        var scrollCounter = 0;
+        // Amount image enlarges by
+        var enlargeFactor = 2.5;
+        
+        var marginLeft = 0;
+        var marginTop = 0;
+        var marginBottom = 0;
+        var TITLEPADDING = 10;
+        var marginTopMin = $('#info_box').height() + $('#info_box').position().top + TITLEPADDING;
+        var currScrollPosition = 0;
+        
+        var container = "div.container";
+        var defImages = $('.default_image');
 
+        // Index of current series being viewed
+        var seriesIndex = 0;
+		// Set of the default images for all series
+        var seriesSet = '<div class="container">' + '<img class="default_image" src="viscovisco_boogie.jpg" />' 
+                    + '<img class="default_image" src="sticks.jpg" />' + '<img class="default_image" src="saucey.jpg" />'
+                    + '<img class="default_image" src="viscovisco_dance.jpg" />' + '</div>';
+        //Series class names
+        var series = ['.series1', '.series2', '.series3', '.series4'];
+        //Series titles
+        var seriesNames = ['Boogie', 'Till', 'You', 'Barf'];
+        // Full series text be swapped in when necessary -- slide at end of series is for the title slide
+        var seriesTexts = ['<div class="container">' + '<div class="slider series1">'+ '<div class="slideWrapper">'
+                + '<article>' + '<span class="side_title">Suck It</span>' + '<img class="default_image" src="viscovisco_boogie.jpg" />' +'</article>'
+                + '<article>' + '<span class="side_title">Just Suck It</span>' + '<img src="viscovisco_dance.jpg" />' +'</article>' +'<article>' +'<span class="side_title">Erybodys suckin it</span>' + 
+                '<img src="saucey.jpg" />' +'</article>' + '<article>' + '<span class="side_title">Way to go donnie</span>' + 
+                '<img src="sticks.jpg" />' + '</article>' + '<article>' + '<span class="side_title">What do you need that for?</span>' + '<img src="patBoogie.jpg" />' +'</article>' + '</div>' + '</div>' + '</div>',
 
+                '<div class="container">' + '<div class="slider series2">'+ '<div class="slideWrapper">'
+                + '<article>' + '<span class="side_title">Suck It Test</span>'+ '<img class="default_image" src="sticks.jpg" />' +'</article>'
+                + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img src="saucey.jpg" />' +'</article>' +'<article>' + '<span class="side_title">Suck It Test</span>' +
+                '<img src="viscovisco_dance.jpg" />' +'</article>' + '<article>' + '<span class="side_title">Suck It Test</span>' + 
+                '<img src="viscovisco_boogie.jpg" />' + '</article>' + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img src="patTill.jpg" />' +'</article>' + '</div>' + '</div>' + '</div>',
 
-	        $('.container').css({ visibility: 'visible' });
+                '<div class="container">' + '<div class="slider series3">'+ '<div class="slideWrapper">'
+                + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img class="default_image" src="saucey.jpg" />' +'</article>'
+                + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img src="viscovisco_boogie.jpg" />' +'</article>' +'<article>' + '<span class="side_title">Suck It Test</span>' +
+                '<img src="sticks.jpg" />' +'</article>' + '<article>' + '<span class="side_title">Suck It Test</span>' +
+                '<img src="viscovisco_dance.jpg" />' + '</article>' + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img src="patYou.jpg" />' +'</article>' + '</div>' + '</div>' + '</div>',
 
-	        var scrollClickAction = function(e) {
-	            e = e || window.event;
-	            e.preventDefault();
-	            e.returnValue = false;
+                '<div class="container">' + '<div class="slider series4">'+ '<div class="slideWrapper">'
+                + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img class="default_image" src="viscovisco_dance.jpg" />' +'</article>'
+                + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img src="viscovisco_boogie.jpg" />' +'</article>' +'<article>' + '<span class="side_title">Suck It Test</span>' +
+                '<img src="saucey.jpg" />' +'</article>' + '<article>' + '<span class="side_title">Suck It Test</span>' +
+                '<img src="sticks.jpg" />' + '</article>' + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img src="patBarf.jpg" />' +'</article>'+ '</div>' + '</div>' + '</div>'];
 
+        
+        
 
-	            if ( !isAnimating ) {
-	            	var wheel=(/Firefox/i.test(navigator.userAgent))? e.detail*-20: e.wheelDelta
-	            	var dir = 1;
-	            	if ( wheel < 0 ) {
-	            		dir = -1;
-	            	}
-	            	var wi = $('.container')[0].offsetHeight;
-	            	var dwi = $('.container').scrollTop();
-	            	var dsf = $('.container')[0].scrollHeight;
-	            	var cond = !( $('.container')[0].offsetHeight + $('.container').scrollTop() >= $('.container')[0].scrollHeight && dir == 1 )
-	            	if ( $('.container')[0].offsetHeight + $('.container').scrollTop() >= $('.container')[0].scrollHeight && dir == 1 || $('.container').scrollTop() <= 0 && dir == -1 ) {
-	            		// Do Nothing
-	            	} else {
-                    	isAnimating = true;
-                        $('.container').animate( {scrollTop: $('.container').scrollTop() + dir * $( window ).height()}, 1600, function(){
-	            			isAnimating = false;
-	            		});
-                    }
-	            	
-	            }
+        /* Set the hover function for Donna Mendes info box
+            ================================================== */ 
+        $( "#info_box" ).mouseenter(function() {
+            if (!entered) {
+                entered = true;
+                $('#info_box').append("<div id='info'><div id='info_title'>info</div></div>")
+                $( "#info" ).mouseenter(function() {
+                    $('#info').append("<div id='info_content'>some shit being said heer</div>")
+                    $('#info_title').css({fontStyle: 'italic'})
+                });
+                $( "#info" ).mouseleave(function() {
+                    $('#info_content').remove();
+                    $('#info_title').css({fontStyle: 'normal'})
+                });
+                $('#info_box').append("<div id='blog'><div id='blog_title'>blog</div></div>")
+                $( "#blog" ).mouseenter(function() {
+                    $('#blog').append("<div id='blog_content'>Dis Right Heerr is a BLOG</div>")
+                    $('#blog_title').css({fontStyle: 'italic'})
+                });
+                $( "#blog" ).mouseleave(function() {
+                    $('#blog_content').remove();
+                    $('#blog_title').css({fontStyle: 'normal'})
+                });
+                $('#info_box').append("<div id='contact'><div id='contact_title'>contact</div></div>")
+                $( "#contact" ).mouseenter(function() {
+                    $('#contact').append("<div id='contact_content'>donnamendes@mac.com</div>")
+                    $('#contact_title').css({fontStyle: 'italic'})
+                });
+                $( "#contact" ).mouseleave(function() {
+                    $('#contact_content').remove();
+                    $('#contact_title').css({fontStyle: 'normal'})
+                });
+                $('#info_box').css({backgroundColor: 'white'})
+                $('#donnaTitle').css({fontStyle: 'italic'})
+            }
+        });
 
+        $( "#info_box" ).mouseleave(function() {
+            $('#info').remove();
+            $('#blog').remove();
+            $('#contact').remove();
+            $('#info_box').css({backgroundColor: 'transparent'})
+            $('#donnaTitle').css({fontStyle: 'normal'})
+            entered = false;
+        });
+        
+        /* Set initial position of elements displayed
+            ================================================== */ 
+        var setSeriesPosition = function() {
+            
+            for ( var i = 0; i < defImages.length; i++ ) {
+                if (enlarged)
+                    $(defImages[i]).css({height:500})
+                marginLeft = $( window ).width()/2 - $(defImages[i]).width()/2;
+                marginTop = Math.max(marginTopMin, $( window ).height()/2 - $(defImages[i]).height()/2);
+                marginBottom = $( window ).height() - marginTop - $(defImages[i]).height();
+                $(defImages[i]).css({
+                    marginTop: marginTop,
+                    marginBottom: marginBottom,
+                    marginLeft: marginLeft
+                });
+            }
+
+            $('.container').css({visibility: 'visible'});
+            if (resizing)
+                currScrollPosition = seriesIndex * (marginTop + marginBottom + $(defImages[seriesIndex]).height() );
+            $('.container').scrollTop(currScrollPosition)
+        };
+
+        var setHeaderPosition = function() {
+            var headerMarginLeft = $( window ).width()/2 - $('#info_box').width() / 2;
+            $('#info_box').css({
+                marginLeft: headerMarginLeft
+            });
+            $('#header').css({ visibility: 'visible' });
+        }
+
+        var setupInitialPosition = function() {
+            setHeaderPosition();
+            setSeriesPosition();  
+        }
+
+        setupInitialPosition();
+        // Resize
+        $(window).resize(setupInitialPosition);
+        resizing = true;
+
+        /* Set back button function
+            ================================================== */ 
+        $($('#series_back')[0]).click(function(){
+            if ( seriesView ) {
+                $('#series_back').html(seriesNames[seriesIndex]);
+                $('#series_back').css( {cursor: "default"} );
+                $('#series_back').css({fontStyle: 'italic'})
+                seriesView = false;
+                setTimeout(initializeDefault,120); // Wait so there are no left over scroll events
+            }
+        });
+
+        /* Set scroll to enlarge or switch series
+            ================================================== */ 
+        var footer = document.getElementById('footer');
+
+        var scrollClickAction = function(e) {
+            e = e || window.event;
+            var click = true;
+
+            if ( e ) {
+                e.preventDefault();
+                e.returnValue = false;
+                click = false;
+            } 
+
+            scrollCounter+=1;
+
+            if ( scrollCounter > scrollThreshold ) {
+            	scrollCounter = 0;
+		        if ( !enlarged ) {
+
+		            isAnimating = true;
+
+		            // Kinda hacky... done because in firefox the mouseevent last too long
+		            // need a timeout to watch until the first event is done
+		            if (/Firefox/i.test(navigator.userAgent) && !click) {
+		                setTimeout(enlargeDefaultImage, 400);
+		            } else {
+		                enlargeDefaultImage();
+		            }
+		        } else {
+		            if ( !isAnimating ) {
+		                var wheel=(/Firefox/i.test(navigator.userAgent))? e.detail*-20: e.wheelDelta
+		                var dir = 1;
+		                if ( wheel < 0 ) {
+		                    dir = -1;
+		                }
+		                if ( $('.container')[0].offsetHeight + $('.container').scrollTop() >= $('.container')[0].scrollHeight && dir == 1 || $('.container').scrollTop() <= 0 && dir == -1 ) {
+		                    // Do Nothing
+		                } else {
+		                    isAnimating = true;
+		                    currScrollPosition = $('.container').scrollTop() + dir * $( window ).height();
+		                    $('.container').animate( {scrollTop: currScrollPosition}, 1600, function(){
+		                        isAnimating = false;
+		                        seriesIndex += dir;
+		                        $('#series_back')[0].innerText = seriesNames[seriesIndex];
+		                    });
+		                }
+		                
+		            }
+		        }
         	}
+        }
 
-	        // Fuck firefox scroll -- FIGURE IT OUT DOH
-	        if (/Firefox/i.test(navigator.userAgent)) {
-	            window.DOMMouseScroll = document.DOMMouseScroll = scrollClickAction;
-	        } else {
-	            window.onmousewheel = document.onmousewheel  = scrollClickAction;
-	        }
+        // Enlarge default image by the enlarge factor set above
+        var enlargeDefaultImage = function() {
+            $(footer).animate({ bottom: 30 }, 1000);
 
+            marginTop = Math.max(marginTopMin, $( window ).height()/2 - $(defImages[0]).height()/2 * enlargeFactor);
+            marginLeft = $( window ).width()/2 - $(defImages[0]).width()/2 * enlargeFactor;
+            
+            $(defImages[0]).animate( {marginTop: marginTop, marginLeft: marginLeft, height: $(defImages[0]).height() * enlargeFactor}, 1000, initializeDefault);
 
-			// var container = document.getElementById('container')
-			// var thumbnails = document.getElementById('thumbnail_paintings')
-			// var imgIndex = 0
-			// var enlarged = false
-			// var enabled = true
+            enlarged = true;
+        }
 
-			// var dlTot = 0;
-			// var pastDir = 0;
+        /* Set series mode to switch to scroll view when clicked
+            ================================================== */ 
+        var initializeDefault = function() {
+            $(container).replaceWith(seriesSet);
+            defImages = $('.default_image');
+            setSeriesPosition();
+            setTimeout(setSeriesPosition, 40); //For chrome, it needs time to load images
+            $(window).resize(setupInitialPosition);
+            scrollCounter = 0;
 
-			// var test = document.getElementById('test')
+            defImages.click(function(){
+                if ( !isAnimating ) {
+                    seriesView = true;
+                    swapSeriesText();
+                    $(window).off("resize", setupInitialPosition);
+                    $('#series_back').html("Back");
+                    $('#series_back').css({
+                        cursor: "pointer",
+                        fontStyle: 'normal'
+                    });
+                }
+            });
+            isAnimating = false;
+        }
 
-			// var images=[
-   //  			"viscovisco_boogie.jpg",
-   //  			"viscovisco_dance.jpg",
-   //  			"saucey.jpg",
-   //  			"sticks.jpg"
-			// ]
+        /* Switch to scroll view, enable slider
+            ================================================== */ 
+        var swapSeriesText = function() {
+            var container = "div.container";
+            var currentSeriesText = seriesTexts[seriesIndex];
+            var currentSeries = series[seriesIndex]
 
-			// function enlargeScrollImage(e){
-			// 	window.alert("test");
-			// }
-
-			// function enlargeScrollImage(e){
-			// 	if ( enabled ) {
-	  //   			var evt=window.event || e //equalize event object
-	  //   			var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta //delta returns +120 when wheel is scrolled up, -120 when scrolled down
-
-	  //   			if (enlarged) {
-	  //   				imgIndex = (delta>=0)? imgIndex+1 : imgIndex-1
-	  //   				imgIndex=(imgIndex<-1)? -1 : (imgIndex>images.length-1)? images.length-1 : imgIndex
-
-	  //   				if ( imgIndex == -1 ) {
-	  //   					thumbnails.style.height = '30%'
-	  //   					imgIndex = 0
-	  //   					enlarged = false
-	  //   				} else
-	  //   					thumbnails.src=images[imgIndex]
-	  //   				enabled = false
-	  //   				evt.detail = 0
-	  //   				evt.wheelDelta = 0
-	  //   				setTimeout(function(){enabled=true}, 800)
-	  //   			} else {
-	  //   				if(thumbnails && thumbnails.style && delta > 0) {
-	  //   					thumbnails.style.height = '500px'
-	  //   					enlarged = true
-	  //   					enabled = false
-	  //   					evt.detail = 0
-	  //   					evt.wheelDelta = 0
-
-	  //   					setTimeout(function(){enabled=true}, 800)
-	  //   				}
-	  //   			}
-	  //   			test.innerHTML = imgIndex
-
-	  //   			if (evt.preventDefault) //disable default wheel action of scrolling page
-	  //       			evt.preventDefault()
-	  //   			else
-	  //       			return false
- 		// 		}
-			// }
-
-			
-
-			// function enlargeScrollImage(e){
-   //  			var evt=window.event || e //equalize event object
-   //  			var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta //delta returns +120 when wheel is scrolled up, -120 when scrolled down
-    			
-   //  			dlTot += delta
-   //  			test.innerHTML = dlTot
-
-   //  			if ( pastDir == 1 && delta < 0 )
-   //  				dlTot = -2000
-   //  			else if ( pastDir == -1 && delta > 0 )
-   //  				dlTot = 2000
-   //  			if ( Math.abs(dlTot) >= 2000 ) {
-	  //   			if (enlarged) {
-	  //   				imgIndex = (dlTot>=0)? imgIndex+1 : imgIndex-1
-	  //   				// if ( delta < -120 )
-	  //   				// 	imgIndex+=1
-	  //   				// else if ( delta > 120)
-	  //   				// 	imgIndex-=1
-	  //   				pastDir = (dlTot>=0)? 1 : -1
-
-	  //   				imgIndex=(imgIndex<-1)? -1 : (imgIndex>images.length-1)? images.length-1 : imgIndex
-
-	  //   				if ( imgIndex == -1 ) {
-	  //   					thumbnails.style.height = '30%';
-	  //   					imgIndex = 0
-	  //   					enlarged = false
-	  //   				} else
-	  //   					thumbnails.src=images[imgIndex]
-	  //   			} else {
-	  //   				if(thumbnails && thumbnails.style && dlTot > 0) {
-	  //   					thumbnails.style.height = '500px'
-	  //   					enlarged = true
-	  //   				}
-	  //   			}
-	  //   			dlTot = 0
-   //  			}
-
-   //  			if (evt.preventDefault) //disable default wheel action of scrolling page
-   //      			evt.preventDefault()
-   //  			else
-   //      			return false
- 
-			// }
-
-			// var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
- 
-			// if (container.attachEvent) //if IE (and Opera depending on user setting)
-   //  			container.attachEvent("on"+mousewheelevt, enlargeScrollImage)
-			// else if (container.addEventListener) //WC3 browsers
-   //  			container.addEventListener(mousewheelevt, enlargeScrollImage, false)
+            $(container).replaceWith(currentSeriesText);
 
 
-		</script>
+            slides = $(currentSeries).find('article');
+            img = slides[0].children[1]
 
-  	</body>
+            marginLeft = $(currentSeries).width()/2 - img.offsetWidth/2;
+            marginTop = Math.max(marginTopMin, $( window ).height()/2 - img.offsetHeight/2);
 
+            wrapperWidth = $(currentSeries).width()*2 * slides.length+1
+            slides[0].style.paddingRight= $(currentSeries).width()*2+"px"; //For chrome need to load photos before enabling slider, place non-default photos off screen
+            slides.css('float', 'left');
+
+            $('.container').css({ marginTop: marginTop });
+            $('.slideWrapper').css({
+                width: wrapperWidth,
+                marginLeft: marginLeft,
+                visibility: 'visible'
+            });
+
+            setTimeout(function(){$(currentSeries).slider( { backButton: $($('#series_back')[0]), marginTopMin: marginTopMin, headerResize: setHeaderPosition })}, 20); //For chrome, it needs time to load images
+
+        }
+
+        /* Set scroll listeners for browsers
+            ================================================== */ 
+        if (/Firefox/i.test(navigator.userAgent)) {
+            window.addEventListener('DOMMouseScroll', scrollClickAction, false);
+            window.addEventListener("keydown", function(e) {
+                // space and arrow keys
+                if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                    e.preventDefault();
+                }
+            }, false);
+        } else {
+            window.onmousewheel = scrollClickAction;
+        }
+
+    </script>
+      
+<!-- END body -->
+</body>
+<!-- END html -->
 </html>
