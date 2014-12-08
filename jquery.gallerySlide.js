@@ -92,7 +92,7 @@
             /* Init Slider
             ================================================== */ 
             var init = function() {
-                      
+                            
                 wrapper.prepend($(slides[slidesCount-1]).clone());
                 wrapper.prepend($(slides[slidesCount-2]).clone());
                 slides = $this.find(options.slide);

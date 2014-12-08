@@ -42,6 +42,10 @@
         </div>
     </div>
 
+    <div id="scrollReminder">
+    	Scroll
+    </div>
+
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="jquery.gallerySlide.js"></script>
@@ -52,6 +56,10 @@
         var seriesView = false;
         var resizing = false;
         var isAnimating = false;
+        var visible = false;
+        var scrolled = false;
+
+		var scrollTimeout;
 
         // ScrollThresh and Counter limit unwanted scroll events triggering
         var scrollThreshold = 15;
@@ -107,8 +115,23 @@
                 '<img src="saucey.jpg" />' +'</article>' + '<article>' + '<span class="side_title">Suck It Test</span>' +
                 '<img src="sticks.jpg" />' + '</article>' + '<article>' + '<span class="side_title">Suck It Test</span>' + '<img src="patBarf.jpg" />' +'</article>'+ '</div>' + '</div>' + '</div>'];
 
-        
-        
+        // Preload all images
+        var image1 = new Image();
+        image1.src = "viscovisco_boogie.jpg";
+        var image2 = new Image();
+        image2.src = "viscovisco_dance.jpg";
+        var image3 = new Image();
+        image3.src = "saucey.jpg";
+        var image4 = new Image();
+        image4.src = "sticks.jpg";
+        var image5 = new Image();
+        image5.src = "patBoogie.jpg";
+        var image6 = new Image();
+        image6.src = "patTill.jpg";
+        var image7 = new Image();
+        image7.src = "patYou.jpg";
+        var image8 = new Image();
+        image8.src = "patBarf.jpg";
 
         /* Set the hover function for Donna Mendes info box
             ================================================== */ 
@@ -135,7 +158,7 @@
                 });
                 $('#info_box').append("<div id='contact'><div id='contact_title'>contact</div></div>")
                 $( "#contact" ).mouseenter(function() {
-                    $('#contact').append("<div id='contact_content'>donnamendes@mac.com</div>")
+                    $('#contact').append("<div id='contact_content'>donnamendes@mac.com</div>");
                     $('#contact_title').css({fontStyle: 'italic'})
                 });
                 $( "#contact" ).mouseleave(function() {
@@ -196,13 +219,13 @@
 
         var setupInitialPosition = function() {
             setHeaderPosition();
-            setSeriesPosition();  
+            setSeriesPosition();
+            resizing = true;
         }
 
-        setupInitialPosition();
+        $(window).load(setupInitialPosition);
         // Resize
         $(window).resize(setupInitialPosition);
-        resizing = true;
 
         /* Set back button function
             ================================================== */ 
@@ -243,6 +266,12 @@
 		            enlargeDefaultImage();
 		        } else {
 		            if ( !isAnimating ) {
+		            	scrolled = true;
+		            	clearTimeout(scrollTimeout);
+		            	if ( visible ) {
+		            		$('#scrollReminder').css({visibility: 'hidden'});
+		            		visible = false;
+		            	}
 		                var wheel=(/Firefox/i.test(navigator.userAgent))? e.detail*-20: e.wheelDelta
 		                var dir = 1;
 		                if ( wheel < 0 ) {
@@ -287,13 +316,16 @@
             $(container).replaceWith(seriesSet);
             defImages = $('.default_image');
             setSeriesPosition();
-            setTimeout(setSeriesPosition, 40); //For chrome, it needs time to load images
             $(window).resize(setupInitialPosition);
             setScrollListeners();
+            if ( !scrolled ) {
+            	scrollTimeout = setTimeout(function() { $('#scrollReminder').css({visibility: 'visible'}); visible=true;}, 5000)
+            }
 
             defImages.click(function(){
                 if ( !isAnimating ) {
                     seriesView = true;
+                    clearTimeout(scrollTimeout);
                     swapSeriesText();
                     $(window).off("resize", setupInitialPosition);
                     $('#series_back').html("Back");
@@ -324,7 +356,7 @@
             marginTop = Math.max(marginTopMin, $( window ).height()/2 - img.offsetHeight/2);
 
             wrapperWidth = $(currentSeries).width()*2 * slides.length+1
-            slides[0].style.paddingRight= $(currentSeries).width()*2+"px"; //For chrome need to load photos before enabling slider, place non-default photos off screen
+            slides[0].style.paddingRight= $(currentSeries).width()*2+"px"; //Load photos before enabling slider, place non-default photos off screen
             slides.css('float', 'left');
 
             $('.container').css({ marginTop: marginTop });
@@ -334,7 +366,8 @@
                 visibility: 'visible'
             });
 
-            setTimeout(function(){$(currentSeries).slider( { backButton: $($('#series_back')[0]), marginTopMin: marginTopMin, headerResize: setHeaderPosition, footer: footer })}, 20); //For chrome, it needs time to load images
+            var slideStart = function(){$(currentSeries).slider( { backButton: $($('#series_back')[0]), marginTopMin: marginTopMin, headerResize: setHeaderPosition, footer: footer })};
+            slideStart();
 
         }
 

@@ -95,3 +95,13 @@ body {
     cursor: default;
     font-style: italic;
 }
+
+#scrollReminder {
+	clear: both;
+    position: absolute;
+    bottom: -25px;
+    text-align: center;
+    visibility: hidden;
+    height: 3em;
+    width: 100%;
+}
